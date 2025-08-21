@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #f4f4f4;
+        }
+        .calculator {
+            background: #333;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+        }
+        .display {
+            background: #222;
+            color: #0f0;
+            font-size: 2rem;
+            text-align: right;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 70px);
+            gap: 10px;
+        }
+        button {
+            padding: 20px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        .operator {
+            background: #f39c12;
+            color: white;
+        }
+        .number {
+            background: #555;
+            color: white;
+        }
+        .equal {
+            background: #27ae60;
+            color: white;
+            grid-column: span 2;
+        }
+        .clear {
+            background: #e74c3c;
+            color: white;
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button class="operator" onclick="appendOperator('/')">÷</button>
+            <button class="operator" onclick="appendOperator('*')">×</button>
+
+            <button class="number" onclick="appendNumber('7')">7</button>
+            <button class="number" onclick="appendNumber('8')">8</button>
+            <button class="number" onclick="appendNumber('9')">9</button>
+            <button class="operator" onclick="appendOperator('-')">−</button>
+
+            <button class="number" onclick="appendNumber('4')">4</button>
+            <button class="number" onclick="appendNumber('5')">5</button>
+            <button class="number" onclick="appendNumber('6')">6</button>
+            <button class="operator" onclick="appendOperator('+')">+</button>
+
+            <button class="number" onclick="appendNumber('1')">1</button>
+            <button class="number" onclick="appendNumber('2')">2</button>
+            <button class="number" onclick="appendNumber('3')">3</button>
+            <button class="equal" onclick="calculate()">=</button>
+
+            <button class="number" onclick="appendNumber('0')">0</button>
+            <button class="number" onclick="appendNumber('.')">.</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        let currentInput = '';
+
+        function updateDisplay() {
+            display.textContent = currentInput || '0';
+        }
+
+        function appendNumber(number) {
+            currentInput += number;
+            updateDisplay();
+        }
+
+        function appendOperator(operator) {
+            if (currentInput === '' || /[+\-*/]$/.test(currentInput)) return;
+            currentInput += operator;
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            updateDisplay();
+        }
+
+        function calculate() {
+            try {
+                currentInput = eval(currentInput).toString();
+            } catch {
+                currentInput = 'Error';
+            }
+            updateDisplay();
+        }
+
+        // Bonus: Keyboard Support
+        window.addEventListener('keydown', (e) => {
+            if (!isNaN(e.key) || e.key === '.') {
+                appendNumber(e.key);
+            } else if (["+","-","*","/"].includes(e.key)) {
+                appendOperator(e.key);
+            } else if (e.key === 'Enter') {
+                calculate();
+            } else if (e.key === 'Backspace') {
+                currentInput = currentInput.slice(0, -1);
+                updateDisplay();
+            } else if (e.key.toLowerCase() === 'c') {
+                clearDisplay();
+            }
+        });
+    </script>
+</body>
+</html>
